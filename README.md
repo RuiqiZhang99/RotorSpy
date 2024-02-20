@@ -9,15 +9,13 @@ The library simulates and animates uavs for analyzing controller's performance
 ```bash
 # Clone the repository and environment setup
 git clone https://github.com/ruiqizhang99/rotorspy.git
-conda create -n uavsim python=3.11
-conda activate uavsim
+conda create -n rotorspy python=3.11
+conda activate rotorspy
 
 # Navigate to the project directory
-cd uav_sim
+cd rotorspy
 pip install -e .
 
 # Run main code
 python3 simulate.py
-
-# Check data folder for results
 ```
