@@ -349,7 +349,7 @@ if __name__ == '__main__':
     mpi_fork(args.cpu)  # run parallel code with mpi
     logger_kwargs = setup_logger_kwargs(args.exp_name, args.seed)
 
-    env = DroneDock_Env(quadrotor_1, quadrotor_2, residual_rl=True)
+    env = DroneDock_Env(quadrotor_1, quadrotor_2, pid_control=True)
     ppo(env_fn=env,
         actor_critic=core.MLPActorCritic,
         ac_kwargs=dict(hidden_sizes=[args.hidden_dim]*args.layers), 

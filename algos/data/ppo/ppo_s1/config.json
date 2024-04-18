@@ -30,14 +30,14 @@
                 }
             },
             "angVelDes_2":	{
-                "(-0.8817320054664128, -1.2105368757751138, 0.0)":	{
-                    "x":	-0.8817320054664128,
-                    "y":	-1.2105368757751138,
+                "(-1.2070960595578069, -0.3426801318924491, 0.0)":	{
+                    "x":	-1.2070960595578069,
+                    "y":	-0.3426801318924491,
                     "z":	0.0
                 }
             },
             "attController":	{
-                "<utils.attitudecontroller.QuadcopterAttitudeControllerNested object at 0x7f60f3261640>":	{
+                "<utils.attitudecontroller.QuadcopterAttitudeControllerNested object at 0x7f2b2edad640>":	{
                     "_timeConstAngle_RP":	0.15,
                     "_timeConstAngle_Y":	0.5,
                     "_timeConstRate_RP":	0.05,
@@ -60,12 +60,12 @@
                 }
             },
             "cur_state_2":	{
-                "QuadState:\n t:     [0.00]\n pos:   [0.75, -0.55, 0.00]\n att:   [1.00, 0.00, 0.00, 0.00]\n vel:   [0.00, 0.00, 0.00]\n omega: [0.00, 0.00, 0.00]\n proper_acc: [0.00, 0.00, 0.00]\n cmd_collective_thrust: [16.21]\n cmd_bodyrates: [-0.88, -1.21, 0.00]\n":	{
+                "QuadState:\n t:     [0.00]\n pos:   [0.21, -0.74, 0.00]\n att:   [1.00, 0.00, 0.00, 0.00]\n vel:   [0.00, 0.00, 0.00]\n omega: [0.00, 0.00, 0.00]\n proper_acc: [0.00, 0.00, 0.00]\n cmd_collective_thrust: [16.21]\n cmd_bodyrates: [-1.21, -0.34, 0.00]\n":	{
                     "att":	"[1 0 0 0]",
-                    "cmd_bodyrates":	"[-0.88173201 -1.21053688  0.        ]",
+                    "cmd_bodyrates":	"[-1.20709606 -0.34268013  0.        ]",
                     "cmd_collective_thrust":	16.21,
                     "omega":	"[0 0 0]",
-                    "pos":	"[ 0.74848827 -0.5451846   0.        ]",
+                    "pos":	"[ 0.21080191 -0.74255298  0.        ]",
                     "proper_acc":	"[0 0 0]",
                     "t":	0,
                     "vel":	"[0. 0. 0.]",
@@ -79,7 +79,7 @@
             "g":	9.8,
             "highlevel_on":	true,
             "init_pos1":	"[0 0 0]",
-            "init_pos2":	"[ 0.74848827 -0.5451846   0.        ]",
+            "init_pos2":	"[ 0.21080191 -0.74255298  0.        ]",
             "maxMotorSpd":	5000,
             "max_obs":	10.0,
             "max_timestep":	5000,
@@ -100,15 +100,15 @@
                 }
             },
             "output_folder":	"results",
-            "pid_controller":	false,
+            "pid_controller":	true,
             "posControl":	{
-                "<utils.positioncontroller.PositionController object at 0x7f60f3261700>":	{
+                "<utils.positioncontroller.PositionController object at 0x7f2b2edad700>":	{
                     "_dampingRatio":	0.7,
                     "_natFreq":	2
                 }
             },
             "quadrotor_1":	{
-                "<utils.vehicle.Vehicle object at 0x7f6246eca1f0>":	{
+                "<utils.vehicle.Vehicle object at 0x7f2c829db1f0>":	{
                     "_accel":	{
                         "(0, 0, 0)":	{
                             "x":	0,
@@ -131,7 +131,7 @@
                     "_mass":	0.985,
                     "_motors":	[
                         {
-                            "<utils.motor.Motor object at 0x7f60f324b6d0>":	{
+                            "<utils.motor.Motor object at 0x7f2b2ed9a6d0>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -187,7 +187,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f60f324b940>":	{
+                            "<utils.motor.Motor object at 0x7f2b2ed9a940>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -243,7 +243,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f60f324bbb0>":	{
+                            "<utils.motor.Motor object at 0x7f2b2ed9abb0>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -299,7 +299,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f60f324be20>":	{
+                            "<utils.motor.Motor object at 0x7f2b2ed9ae20>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -389,7 +389,7 @@
                 }
             },
             "quadrotor_2":	{
-                "<utils.vehicle.Vehicle object at 0x7f6246ed68b0>":	{
+                "<utils.vehicle.Vehicle object at 0x7f2c829e78b0>":	{
                     "_accel":	{
                         "(0, 0, 0)":	{
                             "x":	0,
@@ -412,7 +412,7 @@
                     "_mass":	0.985,
                     "_motors":	[
                         {
-                            "<utils.motor.Motor object at 0x7f60f32540d0>":	{
+                            "<utils.motor.Motor object at 0x7f2b2eda50d0>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -468,7 +468,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f60f3254340>":	{
+                            "<utils.motor.Motor object at 0x7f2b2eda5340>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -524,7 +524,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f60f32545b0>":	{
+                            "<utils.motor.Motor object at 0x7f2b2eda55b0>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -580,7 +580,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f60f3254820>":	{
+                            "<utils.motor.Motor object at 0x7f2b2eda5820>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -649,9 +649,9 @@
                         }
                     },
                     "_pos":	{
-                        "(0.7484882729869142, -0.545184602977306, 0.0)":	{
-                            "x":	0.7484882729869142,
-                            "y":	-0.545184602977306,
+                        "(0.2108019080229584, -0.742552978243987, 0.0)":	{
+                            "x":	0.2108019080229584,
+                            "y":	-0.742552978243987,
                             "z":	0.0
                         }
                     },
@@ -670,7 +670,7 @@
                 }
             },
             "rad_2_deg":	57.29577951308232,
-            "residual_rl":	true,
+            "residual_rl":	false,
             "thrustNormDes_1":	{
                 "(0.0, 0.0, 15.81)":	{
                     "x":	0.0,
@@ -679,9 +679,9 @@
                 }
             },
             "thrustNormDes_2":	{
-                "(-2.993953091947657, 2.180738411909224, 16.21)":	{
-                    "x":	-2.993953091947657,
-                    "y":	2.180738411909224,
+                "(-0.8432076320918336, 2.970211912975948, 16.21)":	{
+                    "x":	-0.8432076320918336,
+                    "y":	2.970211912975948,
                     "z":	16.21
                 }
             },
@@ -693,7 +693,7 @@
     "gamma":	0.99,
     "lam":	0.97,
     "logger":	{
-        "<algos.rl.utils.EpochLogger object at 0x7f60f3261af0>":	{
+        "<algos.rl.utils.EpochLogger object at 0x7f2b2edadaf0>":	{
             "epoch_dict":	{},
             "exp_name":	"ppo",
             "first_row":	true,

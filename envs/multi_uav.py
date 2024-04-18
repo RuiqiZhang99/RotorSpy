@@ -198,11 +198,11 @@ class DroneDock_Env(gym.Env):
              action_1,
              action_2,
              ):
+        self.getMixer()
         if self.pid_controller:
             pwm_cmd_1 = self.mixer_1.get_motor_force_cmd(self.thrustNormDes_1, self.angVelDes_1)
             pwm_cmd_2 = self.mixer_2.get_motor_force_cmd(self.thrustNormDes_2, self.angVelDes_2)
         elif self.residual_rl:
-            self.getMixer()
             pwm_cmd_1 = self.NormAct2PWM(action_1) + self.mixer_1.get_motor_force_cmd(self.thrustNormDes_1, self.angVelDes_1)
             pwm_cmd_2 = self.NormAct2PWM(action_2) + self.mixer_2.get_motor_force_cmd(self.thrustNormDes_2, self.angVelDes_2)
         else:
