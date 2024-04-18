@@ -181,7 +181,7 @@ class DroneDock_Env(gym.Env):
     def NormAct2PWM(self,
                     norm_action
                         ):
-        spd_cmd = 0.3*self.maxMotorSpd * norm_action.squeeze()
+        spd_cmd = 0.1 * self.maxMotorSpd * norm_action.squeeze()
         
         # hardcode to fit simulate drone model
         '''
