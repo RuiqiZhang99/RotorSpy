@@ -11,6 +11,7 @@ setup(
         'scipy',
         'onnx',
         'onnxruntime',
-        'pandas'
+        'pandas',
+        'pyyaml'
     ],
 )

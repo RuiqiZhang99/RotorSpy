@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 
 def rot1(angle, degrees=False):
@@ -102,3 +103,20 @@ def ypr_to_R(ypr, degrees=False):
     R1 = rot1(ypr[2], degrees)
 
     return R3.dot(R2).dot(R1)
+
+def quaternion2rpy(quaternion):
+    '''
+    Converts yaw, pitch, roll angles to a rotation matrix in SO(3).
+
+    Args:
+        quaternion: (numpy.ndarray)
+        degrees: (bool) flag to use if the angles are in degrees,
+            default = False
+    Returns:
+        RPY: (numpy.ndarray) RPY matrix in SO(3)
+    '''
+    w, x, y, z = quaternion[0], quaternion[1], quaternion[2], quaternion[3]
+    roll = math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y))
+    pitch = math.asin(2 * (w * y - x * z))
+    yaw = math.atan2(2 * (w * z + x * y), 1 - 2 * (z * z + y * y))
+    return roll, pitch, yaw

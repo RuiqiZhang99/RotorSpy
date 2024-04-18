@@ -9,7 +9,7 @@ The library simulates and animates uavs for analyzing controller's performance
 ```bash
 # Clone the repository and environment setup
 git clone https://github.com/ruiqizhang99/uav_sim.git
-conda create -n uav_sim python=3.11
+conda env create -f environment.yaml
 conda activate uav_sim
 
 # Navigate to the project directory

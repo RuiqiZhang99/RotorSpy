@@ -3,3 +3,4 @@ matplotlib
 scipy
 onnx
 onnxruntime
+pandas

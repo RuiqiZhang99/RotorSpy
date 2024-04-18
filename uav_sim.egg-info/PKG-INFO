@@ -3,8 +3,10 @@ Name: uav-sim
 Version: 0.0.0
 Author: richzhang@berkeley.edu
 Keywords: robotics,rl
+License-File: LICENSE
 Requires-Dist: numpy
 Requires-Dist: matplotlib
 Requires-Dist: scipy
 Requires-Dist: onnx
 Requires-Dist: onnxruntime
+Requires-Dist: pandas

@@ -37,7 +37,11 @@ Iyz = 0
 omegaSqrToDragTorque = np.matrix(np.diag([0, 0, 0.00014]))  # N.m/(rad/s)**2
 armLength_1 = 0.4  # m
 armLength_2 = 0.2
-##MOTORS##
+
+
+#==============================================================================
+# Define the Motors
+#==============================================================================
 motSpeedSqrToThrust = 7.6e-6  # propeller coefficient
 motSpeedSqrToTorque = 1.1e-7  # propeller coefficient
 motInertia   = 15e-6  #inertia of all rotating parts (motor + prop) [kg.m**2]
@@ -87,8 +91,8 @@ low_level_controller.set_max_motor_spd(motMaxSpeed)
 #==============================================================================
 
 inertiaMatrix = np.matrix([[Ixx, Ixy, Ixz], [Ixy, Iyy, Iyz], [Ixz, Iyz, Izz]])
-quadrocopter_1 = Vehicle(mass, inertiaMatrix, omegaSqrToDragTorque, stdDevTorqueDisturbance)
-quadrocopter_2 = Vehicle(mass, inertiaMatrix, omegaSqrToDragTorque, stdDevTorqueDisturbance)
+quadrocopter_1 = Vehicle(mass, inertiaMatrix, armLength_1, omegaSqrToDragTorque, stdDevTorqueDisturbance)
+quadrocopter_2 = Vehicle(mass, inertiaMatrix, armLength_2, omegaSqrToDragTorque, stdDevTorqueDisturbance)
 
 # Our quadcopter model as    
 #           
@@ -101,13 +105,14 @@ quadrocopter_2 = Vehicle(mass, inertiaMatrix, omegaSqrToDragTorque, stdDevTorque
 #   (+)mot2 | mot1(-)
 # motor_pos = armLength/(2**0.5)
 
-quadrocopter_1.fastadd_quadmotor(armLength_1, motMinSpeed, motMaxSpeed, motSpeedSqrToThrust, motSpeedSqrToTorque, motTimeConst, motInertia, tilt_angle=TILT_ANGLE)
-quadrocopter_2.fastadd_quadmotor(armLength_2, motMinSpeed, motMaxSpeed, motSpeedSqrToThrust, motSpeedSqrToTorque, motTimeConst, motInertia, tilt_angle=TILT_ANGLE)
+quadrocopter_1.fastadd_quadmotor(motMinSpeed, motMaxSpeed, motSpeedSqrToThrust, motSpeedSqrToTorque, motTimeConst, motInertia, tilt_angle=TILT_ANGLE)
+quadrocopter_2.fastadd_quadmotor(motMinSpeed, motMaxSpeed, motSpeedSqrToThrust, motSpeedSqrToTorque, motTimeConst, motInertia, tilt_angle=TILT_ANGLE)
 
 posControl = PositionController(posCtrlNatFreq, posCtrlDampingRatio)
 attController = QuadcopterAttitudeControllerNested(timeConstAngleRP, timeConstAngleY, timeConstRatesRP, timeConstRatesY)
 mixer_1 = QuadcopterMixer(mass, inertiaMatrix, armLength_1/(2**0.5), motSpeedSqrToTorque/motSpeedSqrToThrust)
 mixer_2 = QuadcopterMixer(mass, inertiaMatrix, armLength_2/(2**0.5), motSpeedSqrToTorque/motSpeedSqrToThrust)
+
 #==============================================================================
 # Set UAV No.1 and No.2
 #==============================================================================
@@ -163,7 +168,8 @@ while index < numSteps:
     if disablePositionControl:
         accDes_2 *= 0 #disable position control
         
-    ########################################## Original version  ##########################################################
+    #==================================== Original version =======================================
+    
     #mass-normalised thrust:
     thrustNormDes_1 = accDes_1 + Vec3(0, 0, 9.81)
     angAccDes_1 = attController.get_angular_acceleration(thrustNormDes_1, quadrocopter_1._att, quadrocopter_1._omega)
@@ -183,7 +189,8 @@ while index < numSteps:
     #run the simulator
     quadrocopter_1.run(dt, motCmds_1, dwForce4Quad_1)
     quadrocopter_2.run(dt, motCmds_2, dwForce4Quad_2)
-    ########################################## RL Control ##########################################################
+    
+    #===================================== RL Control ============================================
     # #mass-normalised thrust:
     # thrustNormDes = accDes + Vec3(0, 0, 9.81)
     # #desired ang velocity 
@@ -197,7 +204,7 @@ while index < numSteps:
     # motCmds = low_level_controller.run(cur_state)
     # #run the simulator 
     # quadrocopter.run(dt, motCmds,spdCmd=True)
-    ########################################## RL Control ##########################################################
+    #===================================== RL Control ============================================
 
     #for plotting
     times[index] = t

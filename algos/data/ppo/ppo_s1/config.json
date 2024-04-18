@@ -1,0 +1,723 @@
+{
+    "ac_kwargs":	{
+        "hidden_sizes":	[
+            256,
+            256
+        ]
+    },
+    "actor_critic":	"MLPActorCritic",
+    "clip_ratio":	0.2,
+    "env_fn":	{
+        "<DroneDock_Env instance>":	{
+            "action_space":	{
+                "Box([-1. -1. -1. -1.], [1. 1. 1. 1.], (4,), float32)":	{
+                    "_np_random":	null,
+                    "_shape":	[
+                        4
+                    ],
+                    "bounded_above":	"[ True  True  True  True]",
+                    "bounded_below":	"[ True  True  True  True]",
+                    "dtype":	"float32",
+                    "high":	"[1. 1. 1. 1.]",
+                    "low":	"[-1. -1. -1. -1.]"
+                }
+            },
+            "angVelDes_1":	{
+                "(0.0, 0.0, 0.0)":	{
+                    "x":	0.0,
+                    "y":	0.0,
+                    "z":	0.0
+                }
+            },
+            "angVelDes_2":	{
+                "(-0.8341634433651376, -0.8320022035011927, 0.0)":	{
+                    "x":	-0.8341634433651376,
+                    "y":	-0.8320022035011927,
+                    "z":	0.0
+                }
+            },
+            "attController":	{
+                "<utils.attitudecontroller.QuadcopterAttitudeControllerNested object at 0x7f1ec7cef580>":	{
+                    "_timeConstAngle_RP":	0.15,
+                    "_timeConstAngle_Y":	0.5,
+                    "_timeConstRate_RP":	0.05,
+                    "_timeConstRate_Y":	0.25
+                }
+            },
+            "collision":	false,
+            "ctrl_freq":	500,
+            "cur_state_1":	{
+                "QuadState:\n t:     [0.00]\n pos:   [0.00, 0.00, 0.00]\n att:   [1.00, 0.00, 0.00, 0.00]\n vel:   [0.00, 0.00, 0.00]\n omega: [0.00, 0.00, 0.00]\n proper_acc: [0.00, 0.00, 0.00]\n cmd_collective_thrust: [15.81]\n cmd_bodyrates: [0.00, 0.00, 0.00]\n":	{
+                    "att":	"[1 0 0 0]",
+                    "cmd_bodyrates":	"[0. 0. 0.]",
+                    "cmd_collective_thrust":	15.81,
+                    "omega":	"[0 0 0]",
+                    "pos":	"[0 0 0]",
+                    "proper_acc":	"[0 0 0]",
+                    "t":	0,
+                    "vel":	"[0. 0. 0.]",
+                    "ypr":	"[ 0. -0.  0.]"
+                }
+            },
+            "cur_state_2":	{
+                "QuadState:\n t:     [0.00]\n pos:   [0.51, -0.51, 0.00]\n att:   [1.00, 0.00, 0.00, 0.00]\n vel:   [0.00, 0.00, 0.00]\n omega: [0.00, 0.00, 0.00]\n proper_acc: [0.00, 0.00, 0.00]\n cmd_collective_thrust: [16.21]\n cmd_bodyrates: [-0.83, -0.83, 0.00]\n":	{
+                    "att":	"[1 0 0 0]",
+                    "cmd_bodyrates":	"[-0.83416344 -0.8320022   0.        ]",
+                    "cmd_collective_thrust":	16.21,
+                    "omega":	"[0 0 0]",
+                    "pos":	"[ 0.51108506 -0.51241268  0.        ]",
+                    "proper_acc":	"[0 0 0]",
+                    "t":	0,
+                    "vel":	"[0. 0. 0.]",
+                    "ypr":	"[ 0. -0.  0.]"
+                }
+            },
+            "deg_2_rad":	0.017453292519943295,
+            "des_pos1":	"[0.  0.  1.5]",
+            "des_pos2":	"[0.  0.  1.6]",
+            "dt":	0.002,
+            "g":	9.8,
+            "highlevel_on":	true,
+            "init_pos1":	"[0 0 0]",
+            "init_pos2":	"[ 0.51108506 -0.51241268  0.        ]",
+            "maxMotorSpd":	5000,
+            "max_obs":	10.0,
+            "max_timestep":	5000,
+            "miniquad_random_init":	true,
+            "norm_obs":	true,
+            "num_drones":	2,
+            "observation_space":	{
+                "Box([-1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.], [1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.], (17,), float32)":	{
+                    "_np_random":	null,
+                    "_shape":	[
+                        17
+                    ],
+                    "bounded_above":	"[ True  True  True  True  True  True  True  True  True  True  True  True\n  True  True  True  True  True]",
+                    "bounded_below":	"[ True  True  True  True  True  True  True  True  True  True  True  True\n  True  True  True  True  True]",
+                    "dtype":	"float32",
+                    "high":	"[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]",
+                    "low":	"[-1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.]"
+                }
+            },
+            "output_folder":	"results",
+            "pid_controller":	false,
+            "posControl":	{
+                "<utils.positioncontroller.PositionController object at 0x7f1ec7cef640>":	{
+                    "_dampingRatio":	0.7,
+                    "_natFreq":	2
+                }
+            },
+            "quadrotor_1":	{
+                "<utils.vehicle.Vehicle object at 0x7f202dd064c0>":	{
+                    "_accel":	{
+                        "(0, 0, 0)":	{
+                            "x":	0,
+                            "y":	0,
+                            "z":	0
+                        }
+                    },
+                    "_armlength":	0.4,
+                    "_att":	{
+                        "1,0,0,0":	{
+                            "q":	"[1 0 0 0]"
+                        }
+                    },
+                    "_disturbanceTorqueStdDev":	0.001,
+                    "_inertia":	{
+                        "[[0.004 0.    0.   ]\n [0.    0.008 0.   ]\n [0.    0.    0.012]]":	{
+                            "_getitem":	false
+                        }
+                    },
+                    "_mass":	0.985,
+                    "_motors":	[
+                        {
+                            "<utils.motor.Motor object at 0x7f1ec7cd7580>":	{
+                                "_angularMomentum":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_inertia":	1.5e-05,
+                                "_maxSpeed":	950,
+                                "_minSpeed":	0,
+                                "_position":	{
+                                    "(0.282842712474619, -0.282842712474619, 0)":	{
+                                        "x":	0.282842712474619,
+                                        "y":	-0.282842712474619,
+                                        "z":	0
+                                    }
+                                },
+                                "_powerConsumptionInstantaneous":	0,
+                                "_rotAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	"0",
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_speed":	null,
+                                "_speedSqrToThrust":	7.6e-06,
+                                "_speedSqrToTorque":	1.1e-07,
+                                "_thrust":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_thrustAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	0,
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_timeConst":	0.06,
+                                "_torque":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "id":	0,
+                                "spinDir":	"1"
+                            }
+                        },
+                        {
+                            "<utils.motor.Motor object at 0x7f1ec7cd77f0>":	{
+                                "_angularMomentum":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_inertia":	1.5e-05,
+                                "_maxSpeed":	950,
+                                "_minSpeed":	0,
+                                "_position":	{
+                                    "(-0.282842712474619, -0.282842712474619, 0)":	{
+                                        "x":	-0.282842712474619,
+                                        "y":	-0.282842712474619,
+                                        "z":	0
+                                    }
+                                },
+                                "_powerConsumptionInstantaneous":	0,
+                                "_rotAxis":	{
+                                    "(-0.25881904510252074, 0, -0.9659258262890683)":	{
+                                        "x":	-0.25881904510252074,
+                                        "y":	"0",
+                                        "z":	-0.9659258262890683
+                                    }
+                                },
+                                "_speed":	null,
+                                "_speedSqrToThrust":	7.6e-06,
+                                "_speedSqrToTorque":	1.1e-07,
+                                "_thrust":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_thrustAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	0,
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_timeConst":	0.06,
+                                "_torque":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "id":	1,
+                                "spinDir":	"-1"
+                            }
+                        },
+                        {
+                            "<utils.motor.Motor object at 0x7f1ec7cd7a60>":	{
+                                "_angularMomentum":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_inertia":	1.5e-05,
+                                "_maxSpeed":	950,
+                                "_minSpeed":	0,
+                                "_position":	{
+                                    "(-0.282842712474619, 0.282842712474619, 0)":	{
+                                        "x":	-0.282842712474619,
+                                        "y":	0.282842712474619,
+                                        "z":	0
+                                    }
+                                },
+                                "_powerConsumptionInstantaneous":	0,
+                                "_rotAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	"0",
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_speed":	null,
+                                "_speedSqrToThrust":	7.6e-06,
+                                "_speedSqrToTorque":	1.1e-07,
+                                "_thrust":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_thrustAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	0,
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_timeConst":	0.06,
+                                "_torque":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "id":	2,
+                                "spinDir":	"1"
+                            }
+                        },
+                        {
+                            "<utils.motor.Motor object at 0x7f1ec7cd7cd0>":	{
+                                "_angularMomentum":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_inertia":	1.5e-05,
+                                "_maxSpeed":	950,
+                                "_minSpeed":	0,
+                                "_position":	{
+                                    "(0.282842712474619, 0.282842712474619, 0)":	{
+                                        "x":	0.282842712474619,
+                                        "y":	0.282842712474619,
+                                        "z":	0
+                                    }
+                                },
+                                "_powerConsumptionInstantaneous":	0,
+                                "_rotAxis":	{
+                                    "(-0.25881904510252074, 0, -0.9659258262890683)":	{
+                                        "x":	-0.25881904510252074,
+                                        "y":	"0",
+                                        "z":	-0.9659258262890683
+                                    }
+                                },
+                                "_speed":	null,
+                                "_speedSqrToThrust":	7.6e-06,
+                                "_speedSqrToTorque":	1.1e-07,
+                                "_thrust":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_thrustAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	0,
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_timeConst":	0.06,
+                                "_torque":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "id":	3,
+                                "spinDir":	"-1"
+                            }
+                        }
+                    ],
+                    "_omega":	{
+                        "(0, 0, 0)":	{
+                            "x":	0,
+                            "y":	0,
+                            "z":	0
+                        }
+                    },
+                    "_omegaSqrToDragTorque":	{
+                        "[[0.      0.      0.     ]\n [0.      0.      0.     ]\n [0.      0.      0.00014]]":	{
+                            "_getitem":	false
+                        }
+                    },
+                    "_pos":	{
+                        "(0, 0, 0)":	{
+                            "x":	"0",
+                            "y":	"0",
+                            "z":	"0"
+                        }
+                    },
+                    "_vel":	{
+                        "(0, 0, 0)":	{
+                            "x":	0,
+                            "y":	0,
+                            "z":	0
+                        }
+                    },
+                    "_ypr":	"[ 0. -0.  0.]",
+                    "maxSpeed":	950,
+                    "minSpeed":	0,
+                    "speedSqrToThrust":	7.6e-06,
+                    "speedSqrToTorque":	1.1e-07
+                }
+            },
+            "quadrotor_2":	{
+                "<utils.vehicle.Vehicle object at 0x7f202dd06370>":	{
+                    "_accel":	{
+                        "(0, 0, 0)":	{
+                            "x":	0,
+                            "y":	0,
+                            "z":	0
+                        }
+                    },
+                    "_armlength":	0.2,
+                    "_att":	{
+                        "1,0,0,0":	{
+                            "q":	"[1 0 0 0]"
+                        }
+                    },
+                    "_disturbanceTorqueStdDev":	0.001,
+                    "_inertia":	{
+                        "[[0.004 0.    0.   ]\n [0.    0.008 0.   ]\n [0.    0.    0.012]]":	{
+                            "_getitem":	false
+                        }
+                    },
+                    "_mass":	0.985,
+                    "_motors":	[
+                        {
+                            "<utils.motor.Motor object at 0x7f1ec7cd7f40>":	{
+                                "_angularMomentum":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_inertia":	1.5e-05,
+                                "_maxSpeed":	950,
+                                "_minSpeed":	0,
+                                "_position":	{
+                                    "(0.1414213562373095, -0.1414213562373095, 0)":	{
+                                        "x":	0.1414213562373095,
+                                        "y":	-0.1414213562373095,
+                                        "z":	0
+                                    }
+                                },
+                                "_powerConsumptionInstantaneous":	0,
+                                "_rotAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	"0",
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_speed":	null,
+                                "_speedSqrToThrust":	7.6e-06,
+                                "_speedSqrToTorque":	1.1e-07,
+                                "_thrust":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_thrustAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	0,
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_timeConst":	0.06,
+                                "_torque":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "id":	0,
+                                "spinDir":	"1"
+                            }
+                        },
+                        {
+                            "<utils.motor.Motor object at 0x7f1ec7cda1f0>":	{
+                                "_angularMomentum":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_inertia":	1.5e-05,
+                                "_maxSpeed":	950,
+                                "_minSpeed":	0,
+                                "_position":	{
+                                    "(-0.1414213562373095, -0.1414213562373095, 0)":	{
+                                        "x":	-0.1414213562373095,
+                                        "y":	-0.1414213562373095,
+                                        "z":	0
+                                    }
+                                },
+                                "_powerConsumptionInstantaneous":	0,
+                                "_rotAxis":	{
+                                    "(-0.25881904510252074, 0, -0.9659258262890683)":	{
+                                        "x":	-0.25881904510252074,
+                                        "y":	"0",
+                                        "z":	-0.9659258262890683
+                                    }
+                                },
+                                "_speed":	null,
+                                "_speedSqrToThrust":	7.6e-06,
+                                "_speedSqrToTorque":	1.1e-07,
+                                "_thrust":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_thrustAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	0,
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_timeConst":	0.06,
+                                "_torque":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "id":	1,
+                                "spinDir":	"-1"
+                            }
+                        },
+                        {
+                            "<utils.motor.Motor object at 0x7f1ec7cda460>":	{
+                                "_angularMomentum":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_inertia":	1.5e-05,
+                                "_maxSpeed":	950,
+                                "_minSpeed":	0,
+                                "_position":	{
+                                    "(-0.1414213562373095, 0.1414213562373095, 0)":	{
+                                        "x":	-0.1414213562373095,
+                                        "y":	0.1414213562373095,
+                                        "z":	0
+                                    }
+                                },
+                                "_powerConsumptionInstantaneous":	0,
+                                "_rotAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	"0",
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_speed":	null,
+                                "_speedSqrToThrust":	7.6e-06,
+                                "_speedSqrToTorque":	1.1e-07,
+                                "_thrust":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_thrustAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	0,
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_timeConst":	0.06,
+                                "_torque":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "id":	2,
+                                "spinDir":	"1"
+                            }
+                        },
+                        {
+                            "<utils.motor.Motor object at 0x7f1ec7cda6d0>":	{
+                                "_angularMomentum":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_inertia":	1.5e-05,
+                                "_maxSpeed":	950,
+                                "_minSpeed":	0,
+                                "_position":	{
+                                    "(0.1414213562373095, 0.1414213562373095, 0)":	{
+                                        "x":	0.1414213562373095,
+                                        "y":	0.1414213562373095,
+                                        "z":	0
+                                    }
+                                },
+                                "_powerConsumptionInstantaneous":	0,
+                                "_rotAxis":	{
+                                    "(-0.25881904510252074, 0, -0.9659258262890683)":	{
+                                        "x":	-0.25881904510252074,
+                                        "y":	"0",
+                                        "z":	-0.9659258262890683
+                                    }
+                                },
+                                "_speed":	null,
+                                "_speedSqrToThrust":	7.6e-06,
+                                "_speedSqrToTorque":	1.1e-07,
+                                "_thrust":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "_thrustAxis":	{
+                                    "(0.25881904510252074, 0, 0.9659258262890683)":	{
+                                        "x":	0.25881904510252074,
+                                        "y":	0,
+                                        "z":	0.9659258262890683
+                                    }
+                                },
+                                "_timeConst":	0.06,
+                                "_torque":	{
+                                    "(0, 0, 0)":	{
+                                        "x":	0,
+                                        "y":	0,
+                                        "z":	0
+                                    }
+                                },
+                                "id":	3,
+                                "spinDir":	"-1"
+                            }
+                        }
+                    ],
+                    "_omega":	{
+                        "(0, 0, 0)":	{
+                            "x":	0,
+                            "y":	0,
+                            "z":	0
+                        }
+                    },
+                    "_omegaSqrToDragTorque":	{
+                        "[[0.      0.      0.     ]\n [0.      0.      0.     ]\n [0.      0.      0.00014]]":	{
+                            "_getitem":	false
+                        }
+                    },
+                    "_pos":	{
+                        "(0.511085061833249, -0.5124126753958724, 0.0)":	{
+                            "x":	0.511085061833249,
+                            "y":	-0.5124126753958724,
+                            "z":	0.0
+                        }
+                    },
+                    "_vel":	{
+                        "(0, 0, 0)":	{
+                            "x":	0,
+                            "y":	0,
+                            "z":	0
+                        }
+                    },
+                    "_ypr":	"[ 0. -0.  0.]",
+                    "maxSpeed":	950,
+                    "minSpeed":	0,
+                    "speedSqrToThrust":	7.6e-06,
+                    "speedSqrToTorque":	1.1e-07
+                }
+            },
+            "rad_2_deg":	57.29577951308232,
+            "residual_rl":	true,
+            "thrustNormDes_1":	{
+                "(0.0, 0.0, 15.81)":	{
+                    "x":	0.0,
+                    "y":	0.0,
+                    "z":	15.81
+                }
+            },
+            "thrustNormDes_2":	{
+                "(-2.044340247332996, 2.0496507015834897, 16.21)":	{
+                    "x":	-2.044340247332996,
+                    "y":	2.0496507015834897,
+                    "z":	16.21
+                }
+            },
+            "timestep_counter":	0
+        }
+    },
+    "epochs":	500,
+    "exp_name":	"ppo",
+    "gamma":	0.99,
+    "lam":	0.97,
+    "logger":	{
+        "<algos.rl.utils.EpochLogger object at 0x7f1ec7cef850>":	{
+            "epoch_dict":	{},
+            "exp_name":	"ppo",
+            "first_row":	true,
+            "log_current_row":	{},
+            "log_headers":	[],
+            "output_dir":	"/home/rich/uav_sim/algos/data/ppo/ppo_s1",
+            "output_file":	{
+                "<_io.TextIOWrapper name='/home/rich/uav_sim/algos/data/ppo/ppo_s1/progress.txt' mode='w' encoding='UTF-8'>":	{
+                    "mode":	"w"
+                }
+            }
+        }
+    },
+    "logger_kwargs":	{
+        "exp_name":	"ppo",
+        "output_dir":	"/home/rich/uav_sim/algos/data/ppo/ppo_s1"
+    },
+    "max_ep_len":	5000,
+    "pi_lr":	0.001,
+    "save_freq":	10,
+    "seed":	1,
+    "steps_per_epoch":	20000,
+    "target_kl":	0.01,
+    "train_pi_iters":	2,
+    "train_v_iters":	2,
+    "vf_lr":	0.001
+}

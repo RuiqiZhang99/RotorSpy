@@ -4,31 +4,38 @@ from py3dmath import Vec3, Rotation  # get from https://github.com/muellerlab/py
 from utils.motor import Motor
 
 class Vehicle:
-    def __init__(self, mass, inertiaMatrix, omegaSqrToDragTorque, disturbanceTorqueStdDev):
+    def __init__(self, mass, inertiaMatrix, armLength, omegaSqrToDragTorque, disturbanceTorqueStdDev):
+        
         self._inertia = inertiaMatrix
         self._mass = mass
-        
+        self._armlength = armLength
         self._pos = Vec3(0,0,0)
         self._vel = Vec3(0,0,0)
         self._att = Rotation.identity()
+        self._ypr = self._att.to_euler_YPR()
         self._omega = Vec3(0,0,0)
         self._accel = Vec3(0,0,0)
-
         self._motors = []
-        
         self._omegaSqrToDragTorque = omegaSqrToDragTorque
-        
         self._disturbanceTorqueStdDev = disturbanceTorqueStdDev
         return
         
 
     def add_motor(self, motorPosition, spinDir, minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=0.0):
+        self.minSpeed = minSpeed
+        self.maxSpeed = maxSpeed
+        self.speedSqrToThrust = speedSqrToThrust
+        self.speedSqrToTorque = speedSqrToTorque
         self._motors.append(Motor(motorPosition, spinDir, minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle))
         return
     
     
-    def fastadd_quadmotor(self, armLength, minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=0.0):
-        motor_pos = armLength/(2**0.5)
+    def fastadd_quadmotor(self, minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=0.0):
+        motor_pos = self._armlength/(2**0.5)
+        self.minSpeed = minSpeed
+        self.maxSpeed = maxSpeed
+        self.speedSqrToThrust = speedSqrToThrust
+        self.speedSqrToTorque = speedSqrToTorque
         self._motors.append(Motor(Vec3(motor_pos, -motor_pos, 0), Vec3(0,0,1), minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle, ID=0))
         self._motors.append(Motor(Vec3(-motor_pos, -motor_pos, 0), Vec3(0,0,-1), minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle, ID=1))
         self._motors.append(Motor(Vec3(-motor_pos, motor_pos, 0), Vec3(0,0,1), minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle, ID=2))
@@ -66,13 +73,18 @@ class Vehicle:
         
         vel = self._vel
         att = self._att
+        ypr = self._ypr
         omega = self._omega
         
         
         #euler integration
         self._pos += vel*dt
+        if self._pos.z < 0:
+            self._pos.z = 0.0
+            
         self._vel += acc*dt
-        self._att  = att*Rotation.from_rotation_vector(omega*dt)
+        self._att = att*Rotation.from_rotation_vector(omega*dt)
+        self._ypr = self._att.to_euler_YPR()
         self._omega += angAcc*dt
         
         accMeas = (self._att.inverse() * (acc + Vec3(0, 0, 9.81))); 

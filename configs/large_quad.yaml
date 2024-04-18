@@ -1,0 +1,137 @@
+unity:
+  scene_id: 0 # 0 warehouse, 1 garage, 3 natureforest
+  render: no
+
+simulation:
+  seed: 1
+  sim_dt: 0.002
+  max_t: 5.0
+  num_envs: 300
+  num_threads: 10
+  rotor_ctrl: 2 # 0 single rotor, 1 body rate, 2 motor speed
+  com_latency: 5.0e-3
+  cutoff_time : 0.2
+  trajectory_generation: 0 # 0-hover, 1-offline, 2-online bangbang
+  max_act_oscillation: 1.1 #0.5
+  torque_success_tol: 0.1 #0.005
+
+
+observation_space:
+  history_len: 100
+  state_obs_size: 17
+  act_size: 4
+  env_obs_size: 34
+  latent_size: 8
+
+quadrotor_dynamics:
+  mass: 0.752
+  arm_length: 0.141
+  tbm_fr: [0.10, -0.10, 0.0] #[0.075, -0.10, 0.0] # [m]
+  tbm_bl: [-0.10, 0.10, 0.0] #[-0.075, 0.10, 0.0] # [m]
+  tbm_br: [-0.10, -0.10, 0.0] #[-0.075, -0.10, 0.0] # [m]
+  tbm_fl: [0.10, 0.10, 0.0] # [0.075, 0.10, 0.0] # [m]
+  omega_max: [20.0, 20.0, 20.0] 
+  inertia: [0.0025, 0.0025, 0.0043]
+  kappa: 0.022
+  motor_omega_min: 150.0
+  motor_omega_max: 2333.0
+  motor_tau: 0.033
+  thrust_map: [1.562522e-6, 0.0, 0.0] # max thrust = 8.50 N
+  body_drag_1: [0.0, 0.0, 0.0] # [0.26, 0.28, 0.42]
+  body_drag_3: [0.00, 0.00, 0.00]
+  body_drag_h: 0.00
+  attControl_timeConst_xy:  0.1
+  attControl_timeConst_z: 0.5089
+  QC_TYPE_CF_LARGEQUAD:
+    mass: 0.826
+    arm_length: 0.166
+    tbm_fr: [0.11738, -0.11738, 0.0]  # [m]
+    tbm_bl: [-0.11738, 0.11738, 0.0]  # [m]
+    tbm_br: [-0.11738, -0.11738, 0.0]  # [m]
+    tbm_fl: [0.11738, 0.11738, 0.0]  # [m]
+    omega_max: [20.0, 20.0, 20.0] 
+    inertia: [0.0047, 0.005, 0.0074]
+    kappa: 0.0140
+    motor_omega_min: 0.0 
+    motor_omega_max: 943 # 1385.0
+    motor_tau: 0.01 # TODO
+    thrust_map: [7.64e-6, 0.0, 0.0] 
+    body_drag_1: [0.62, 0.62, 0.62] 
+    body_drag_3: [0.00, 0.00, 0.00] 
+    body_drag_h: 0.00 
+    # angVelControl_timeConst_xy : 0.05
+    attControl_timeConst_xy:  0.1
+    # angVelControl_timeConst_z: 0.2545
+    attControl_timeConst_z: 0.5089
+  QC_TYPE_CF_MINIQUAD:
+    mass: 0.250
+    arm_length: 0.058
+    tbm_fr: [0.0410, -0.0410, 0.0] # [m]
+    tbm_bl: [-0.0410, 0.0410, 0.0] # [m]
+    tbm_br: [-0.0410, -0.0410, 0.0] # [m]
+    tbm_fl: [0.0410, 0.0410, 0.0] # [m]
+    omega_max: [20.0, 20.0, 20.0] 
+    inertia: [250.0e-6, 250.0e-6, 300.0e-6] 
+    kappa:  0.005119
+    motor_omega_min: 0.0 
+    motor_omega_max: 3916 # 6995.0 
+    motor_tau: 0.01 # TODO
+    thrust_map: [1.145e-7, 0.0, 0.0] 
+    body_drag_1: [0.0, 0.0, 0.0] 
+    body_drag_3: [0.00, 0.00, 0.00]
+    body_drag_h: 0.00
+    # angVelControl_timeConst_xy :  0.04
+    attControl_timeConst_xy:  0.08
+    # angVelControl_timeConst_z: 0.2
+    attControl_timeConst_z: 0.4
+
+rewards:
+  acc_coeff: 0 #-0.002 # reward coefficient for acceleration
+  motor_omega_track_coeff: 0 #-0.00001 # reward coefficient for motor tracking
+  ori_coeff: -0.002 # reward coefficient for orientation
+  lin_vel_coeff: -0.001  # reward coefficient for linear velocity
+  ang_vel_coeff: 0 #-0.002  # reward coefficient for angular velocity
+  yaw_vel_coeff: -0.2 #-0.005 # for yaw rate
+  pitch_vel_coeff: -0.2
+  roll_vel_coeff: -0.2
+  lin_accel_coeff: -0.01 #reward coefficient for linear acceleration
+  survive_coeff: 10 # reward coeff for survive
+  oscillate_coeff : -0.06 #-0.00003 #-0.012 # reward coeff for oscillation
+  smooth_coeff : 0 #-0.00004 # reward coeff for oscillation
+  # updating_oscillate_coeff : -0.00001 # reward coeff for oscillation, keeps updating
+  crash_coeff: -10 # reward coeff for crash
+  names:
+    [
+      "acc_penalty",
+      # "ori_penalty",
+      # "lin_vel_penalty",
+      "priv_motor_omega_reward",
+      "roll_vel_penalty",
+      "pitch_vel_penalty",
+      "yaw_vel_penalty",
+      "ang_vel_penalty",
+      "lin_accel_penalty",
+      "survive_reward",
+      "oscillate_reward",
+      "smooth_reward",
+      "total",
+    ]
+  goal_state:
+    highlevel_freq: 50.0
+    position: [0.0, 0.0, 500]
+    rotation: [1.0, 0.0, 0.0, 0.0]
+    lin_vel: [0.0, 0.0, 0.0]
+    ang_vel: [0.0, 0.0, 0.0]
+    # add goal states
+
+rgb_camera:
+  on: yes
+  t_BC: [0.0, 0.0, 0.3] # translational vector of the camera with repect to the body frame
+  r_BC: [0.0, 0.0, -90] # rotational angle (roll, pitch, yaw) of the camera in degree.
+  channels: 3
+  width: 720
+  height: 480
+  fov: 70.0
+  enable_depth: yes 
+  enable_segmentation: no
+  enable_opticalflow: no

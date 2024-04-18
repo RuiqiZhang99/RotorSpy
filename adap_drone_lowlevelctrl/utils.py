@@ -5,6 +5,7 @@ import onnxruntime    # to inference ONNX models, we use the ONNX Runtime
 import onnx
 from onnx import numpy_helper
 from enum import Enum
+from py3dmath import Rotation
 
 import os
 
@@ -117,6 +118,8 @@ class QuadState:
 
         # quaternion [w,x,y,z]
         self.att = np.array([1, 0, 0, 0], dtype=np.float32)
+        
+        self.ypr = Rotation(self.att[0], self.att[1], self.att[2], self.att[3]).to_euler_YPR()
 
         # velocity
         self.vel = np.array([0, 0, 0], dtype=np.float32)
@@ -128,7 +131,7 @@ class QuadState:
         self.proper_acc = np.array([0.0, 0.0, 0.0])
 
         # commanded mass-normalized thrust, from a high-level controller
-        self.cmd_collective_thrust = np.array([0.0])
+        self.cmd_collective_thrust = 0.0
 
         # commanded angular velocity i.e. body rates, from a high-level controller
         self.cmd_bodyrates = np.array([0.0, 0.0, 0.0])
@@ -141,7 +144,7 @@ class QuadState:
                    + " vel:   [%.2f, %.2f, %.2f]\n" % (self.vel[0], self.vel[1], self.vel[2]) \
                    + " omega: [%.2f, %.2f, %.2f]\n" % (self.omega[0], self.omega[1], self.omega[2])\
                    + " proper_acc: [%.2f, %.2f, %.2f]\n" % (self.proper_acc[0], self.proper_acc[1], self.proper_acc[2])\
-                   + " cmd_collective_thrust: [%.2f]\n" % (self.cmd_collective_thrust[0])\
+                   + " cmd_collective_thrust: [%.2f]\n" % (self.cmd_collective_thrust)\
                    + " cmd_bodyrates: [%.2f, %.2f, %.2f]\n" % (self.cmd_bodyrates[0], self.cmd_bodyrates[1], self.cmd_bodyrates[2])
         return repr_str
 

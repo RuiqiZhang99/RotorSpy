@@ -173,7 +173,7 @@ class Rotation:
     @classmethod
     def from_vector_part_of_quaternion(cls, vec):
         vec = Vec3(vec)
-        return Rotation(np.sqrt(1 - vec[0]**2 - vec[1]**2 - vec[2]**2), vec[0], vec[1], vec[2])
+        return Rotation(np.sqrt(1-vec[0]**2-vec[1]**2-vec[2]**2), vec[0], vec[1], vec[2])
         
     
     @classmethod
