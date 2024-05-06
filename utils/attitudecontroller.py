@@ -3,7 +3,7 @@ from __future__ import division, print_function
 from py3dmath import Vec3, Rotation  # get from https://github.com/muellerlab/py3dmath
 import numpy as np
 
-class QuadcopterAttitudeControllerNested:
+class QuadAttiControllerNested:
     def __init__(self, timeConstantAngleRollPitch, timeConstantAngleYaw, timeConstantRateRollPitch, timeConstantRateYaw):
         #A simple, nested controller.
         self._timeConstAngle_RP = timeConstantAngleRollPitch
@@ -11,8 +11,6 @@ class QuadcopterAttitudeControllerNested:
         self._timeConstRate_RP = timeConstantRateRollPitch
         self._timeConstRate_Y  = timeConstantRateYaw
         return
-
-        
 
     def get_angular_acceleration(self, desNormThrust, curAtt, curAngVel):
         #Step 1: compute desired rates:
@@ -72,4 +70,47 @@ class QuadcopterAttitudeControllerNested:
         
         return desAngVel
         
+class QuadAttiController:
+    def __init__(self, time_const_xy=0.064, time_const_z=0.32):
+        self.time_const_xy = time_const_xy
+        self.time_const_z = time_const_z
+        if self.time_const_z < self.time_const_xy:
+            # Ensure yaw control is not more aggressive than tilt control
+            self.time_const_z = self.time_const_xy
+            raise ValueError("Yaw time constant cannot be less than roll/pitch time constant.")
+
+    def get_angular_acceleration(self, curAtt, curAngVel, desAtt=Rotation(1, 0, 0, 0)):
+        # Calculate error attitude
+        err_att = desAtt.inverse() * curAtt
+        des_rot_vec = err_att.to_rotation_vector()
+
+        err_att_inv = err_att.inverse()
+        vector_up = Vec3(0, 0, 1)
+        des_red_att_rot_ax = (err_att_inv * vector_up).cross(vector_up)
+        des_red_att_rot_an_cos = (err_att_inv * vector_up).dot(vector_up)
+
+        if des_red_att_rot_an_cos >= 1.0:
+            des_red_att_rot_an = 0
+        elif des_red_att_rot_an_cos <= -1.0:
+            des_red_att_rot_an = np.pi
+        else:
+            des_red_att_rot_an = np.arccos(des_red_att_rot_an_cos)
+
+        # Normalize the rotation axis
+        n = des_red_att_rot_ax.norm2()
+        if n < 1e-12:
+            des_red_att_rot_ax = Vec3(0, 0, 0)
+        else:
+            des_red_att_rot_ax /= n
+
+        k3 = 1.0 / self.time_const_z
+        k12 = 1.0 / self.time_const_xy
+
+        desAngVel = -k3 * des_rot_vec - (k12 - k3) * des_red_att_rot_an * des_red_att_rot_ax
+
+        desAngAcc = desAngVel - curAngVel
+        desAngAcc.x /= self.time_const_xy
+        desAngAcc.y /= self.time_const_xy
+        desAngAcc.z /= self.time_const_z
         
+        return desAngAcc

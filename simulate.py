@@ -86,7 +86,7 @@ low_level_controller.set_max_motor_spd(motMaxSpeed)
 #==============================================================================
 
 inertiaMatrix = np.matrix([[Ixx, Ixy, Ixz], [Ixy, Iyy, Iyz], [Ixz, Iyz, Izz]])
-quadrocopter = Vehicle(mass, inertiaMatrix, omegaSqrToDragTorque, stdDevTorqueDisturbance)
+quadrocopter = Vehicle(mass, inertiaMatrix, omegaSqrToDragTorque, stdDevTorqueDisturbance, disturbanceTorqueStdDev)
 
 
 # Our quadcopter model as    

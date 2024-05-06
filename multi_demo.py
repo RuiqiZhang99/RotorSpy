@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from py3dmath import Vec3, Rotation  # get from https://github.com/muellerlab/py3dmath
 from utils.vehicle import Vehicle
 from utils.positioncontroller import PositionController
-from utils.attitudecontroller import QuadcopterAttitudeControllerNested
+from utils.attitudecontroller import QuadAttiControllerNested
 from utils.mixer import QuadcopterMixer
 from utils.animate import animate_quadcopter_history, animate_multidrones_history
 from utils.downwash import downwash
@@ -22,7 +22,7 @@ np.random.seed(0)
 # Define the simulation
 #==============================================================================
 dt = 0.002  # sdifferent
-endTime = 5
+endTime = 10
 
 #==============================================================================
 # Define the vehicle
@@ -35,8 +35,8 @@ Ixy = 0
 Ixz = 0
 Iyz = 0
 omegaSqrToDragTorque = np.matrix(np.diag([0, 0, 0.00014]))  # N.m/(rad/s)**2
-armLength_1 = 0.4  # m
-armLength_2 = 0.2
+armLength_1 = 0.166  # m
+armLength_2 = 0.058
 
 
 #==============================================================================
@@ -49,7 +49,6 @@ motInertia   = 15e-6  #inertia of all rotating parts (motor + prop) [kg.m**2]
 motTimeConst = 0.06  # time constant with which motor's speed responds [s]
 motMinSpeed  = 0  #[rad/s]
 motMaxSpeed  = 950  #[rad/s]
-TILT_ANGLE = np.deg2rad(15)
 
 #==============================================================================
 # Define the disturbance
@@ -105,11 +104,11 @@ quadrocopter_2 = Vehicle(mass, inertiaMatrix, armLength_2, omegaSqrToDragTorque,
 #   (+)mot2 | mot1(-)
 # motor_pos = armLength/(2**0.5)
 
-quadrocopter_1.fastadd_quadmotor(motMinSpeed, motMaxSpeed, motSpeedSqrToThrust, motSpeedSqrToTorque, motTimeConst, motInertia, tilt_angle=TILT_ANGLE)
-quadrocopter_2.fastadd_quadmotor(motMinSpeed, motMaxSpeed, motSpeedSqrToThrust, motSpeedSqrToTorque, motTimeConst, motInertia, tilt_angle=TILT_ANGLE)
+quadrocopter_1.fastadd_quadmotor(motMinSpeed, motMaxSpeed, motSpeedSqrToThrust, motSpeedSqrToTorque, motTimeConst, motInertia)
+quadrocopter_2.fastadd_quadmotor(motMinSpeed, motMaxSpeed, motSpeedSqrToThrust, motSpeedSqrToTorque, motTimeConst, motInertia)
 
 posControl = PositionController(posCtrlNatFreq, posCtrlDampingRatio)
-attController = QuadcopterAttitudeControllerNested(timeConstAngleRP, timeConstAngleY, timeConstRatesRP, timeConstRatesY)
+attController = QuadAttiControllerNested(timeConstAngleRP, timeConstAngleY, timeConstRatesRP, timeConstRatesY)
 mixer_1 = QuadcopterMixer(mass, inertiaMatrix, armLength_1/(2**0.5), motSpeedSqrToTorque/motSpeedSqrToThrust)
 mixer_2 = QuadcopterMixer(mass, inertiaMatrix, armLength_2/(2**0.5), motSpeedSqrToTorque/motSpeedSqrToThrust)
 
@@ -187,8 +186,8 @@ while index < numSteps:
     else:
         dwForce4Quad_1 = downwash(quadAbsPos_2, quadAbsPos_1, quadrocopter_2.get_motor_forces())
     #run the simulator
-    quadrocopter_1.run(dt, motCmds_1, dwForce4Quad_1)
-    quadrocopter_2.run(dt, motCmds_2, dwForce4Quad_2)
+    quadrocopter_1.run(dt, motCmds_1) #, dwForce4Quad_1)
+    quadrocopter_2.run(dt, motCmds_2) #, dwForce4Quad_2)
     
     #===================================== RL Control ============================================
     # #mass-normalised thrust:
@@ -304,5 +303,5 @@ for i in range(steps):
 x_list = [x_1, x_2]
 R_list = [R_1, R_2]
 
-animate_multidrones_history(times, x_list, R_list, [0.4, 0.2], tilt_angle=TILT_ANGLE, gif_path='data/multi_drones_animation.gif')       
+animate_multidrones_history(times, x_list, R_list, [0.4, 0.2], gif_path='data/multi_drones_animation.gif')       
     

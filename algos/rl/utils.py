@@ -192,7 +192,7 @@ class Logger:
     state of a training run, and the trained model.
     """
 
-    def __init__(self, output_dir=None, output_fname='progress.txt', exp_name=None):
+    def __init__(self, output_dir=None, output_fname='progress.csv', exp_name=None):
         """
         Initialize a Logger.
 
@@ -272,12 +272,12 @@ class Logger:
             config_json['exp_name'] = self.exp_name
         if proc_id()==0:
             output = json.dumps(config_json, separators=(',',':\t'), indent=4, sort_keys=True)
-            print(colorize('Saving config:\n', color='cyan', bold=True))
-            print(output)
+            # print(colorize('Saving config:\n', color='cyan', bold=True))
+            # print(output)
             with open(osp.join(self.output_dir, "config.json"), 'w') as out:
                 out.write(output)
 
-    def save_state(self, state_dict, itr=None):
+    def save_state(self, state_dict, itr=None, others=None):
         """
         Saves the state of an experiment.
 
@@ -307,7 +307,7 @@ class Logger:
             if hasattr(self, 'tf_saver_elements'):
                 self._tf_simple_save(itr)
             if hasattr(self, 'pytorch_saver_elements'):
-                self._pytorch_simple_save(itr)
+                self._pytorch_simple_save(itr, others)
 
     def setup_tf_saver(self, sess, inputs, outputs):
         """
@@ -365,7 +365,7 @@ class Logger:
         """
         self.pytorch_saver_elements = what_to_save
 
-    def _pytorch_simple_save(self, itr=None):
+    def _pytorch_simple_save(self, itr=None, others=None):
         """
         Saves the PyTorch model (or models).
         """
@@ -376,6 +376,8 @@ class Logger:
             fpath = osp.join(self.output_dir, fpath)
             fname = 'model' + ('%d'%itr if itr is not None else '') + '.pt'
             fname = osp.join(fpath, fname)
+            if others is not None:
+                reward_history = 'model' + ('%d'%itr if itr is not None else '') + '.pt'
             os.makedirs(fpath, exist_ok=True)
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")

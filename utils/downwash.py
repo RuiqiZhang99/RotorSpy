@@ -112,4 +112,28 @@ def thrust_change(uavPosArr, uavRpyArr, uavInfoArr):
 #           |
 #     y<----+-----
 #           |
-#   (+)mot2 | mot1(-)    
+#   (+)mot2 | mot1(-)   
+
+import math
+
+def downwash_karan(relativePos):
+
+    centerLineForce = 6.8  # [m/s^2]
+    kForce = -20.8  # [1/m^2]
+    maxExtraForce = 2.0  # [m/s^2]
+    dockSep = 0.05  
+
+    # Distance on X-Y axes
+    radialSepSq = relativePos.x**2 + relativePos.y**2
+    extraForce = 0.0
+
+    # Calculate the Downwash Force
+    if relativePos.z <= dockSep + 0.2:
+        extraForce = (1 - (relativePos[2] - dockSep) / 0.2) * maxExtraForce
+
+    # Too Far
+    if radialSepSq > 0.5**2 or relativePos.z < dockSep:
+        return Vec3(0, 0, 0)
+    else:
+        downwashForce = (centerLineForce + extraForce) * math.exp(kForce * radialSepSq)
+        return Vec3(0, 0, -downwashForce) 

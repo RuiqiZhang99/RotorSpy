@@ -31,7 +31,7 @@
                 }
             },
             "attController_1":	{
-                "<utils.attitudecontroller.QuadAttiController object at 0x7f23e9795b50>":	{
+                "<utils.attitudecontroller.QuadAttiController object at 0x7fdffeaa2af0>":	{
                     "time_const_xy":	0.064,
                     "time_const_z":	0.32
                 }
@@ -68,15 +68,15 @@
                 }
             },
             "g":	9.8,
-            "highlevel_on":	true,
+            "highlevel_on":	false,
             "init_pos1":	"[0 0 0]",
             "last_pwm_cmd_1":	"[0. 0. 0. 0.]",
             "max_obs":	10.0,
-            "max_pwm":	5.0,
+            "max_pwm":	10.0,
             "max_timestep":	5000,
             "miniquad_random_init":	false,
             "mixer_1":	{
-                "<utils.mixer.QuadcopterMixer object at 0x7f23e9795c10>":	{
+                "<utils.mixer.QuadcopterMixer object at 0x7fdffeaa2bb0>":	{
                     "_inertiaMatrix":	{
                         "[[0.005507 0.       0.      ]\n [0.       0.005507 0.      ]\n [0.       0.       0.009877]]":	{
                             "_getitem":	false
@@ -89,28 +89,28 @@
             "norm_obs":	true,
             "num_drones":	2,
             "observation_space":	{
-                "Box([-1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.\n -1. -1.], [1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.], (20,), float32)":	{
+                "Box([-1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.], [1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.], (15,), float32)":	{
                     "_np_random":	null,
                     "_shape":	[
-                        20
+                        15
                     ],
-                    "bounded_above":	"[ True  True  True  True  True  True  True  True  True  True  True  True\n  True  True  True  True  True  True  True  True]",
-                    "bounded_below":	"[ True  True  True  True  True  True  True  True  True  True  True  True\n  True  True  True  True  True  True  True  True]",
+                    "bounded_above":	"[ True  True  True  True  True  True  True  True  True  True  True  True\n  True  True  True]",
+                    "bounded_below":	"[ True  True  True  True  True  True  True  True  True  True  True  True\n  True  True  True]",
                     "dtype":	"float32",
-                    "high":	"[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]",
-                    "low":	"[-1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.\n -1. -1.]"
+                    "high":	"[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]",
+                    "low":	"[-1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1. -1.]"
                 }
             },
             "output_folder":	"results",
             "pid_controller":	false,
             "posControl_1":	{
-                "<utils.positioncontroller.PositionController object at 0x7f23e9795a30>":	{
+                "<utils.positioncontroller.PositionController object at 0x7fdffeaa29d0>":	{
                     "_dampingRatio":	0.7,
                     "_natFreq":	3.8
                 }
             },
             "quadrotor_1":	{
-                "<utils.vehicle.Vehicle object at 0x7f244aaef100>":	{
+                "<utils.vehicle.Vehicle object at 0x7fe05fe3ebb0>":	{
                     "_accel":	{
                         "(0, 0, 0)":	{
                             "x":	0,
@@ -133,7 +133,7 @@
                     "_mass":	0.75,
                     "_motors":	[
                         {
-                            "<utils.motor.Motor object at 0x7f23ea3108b0>":	{
+                            "<utils.motor.Motor object at 0x7fdfff61e850>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -189,7 +189,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f23ea310b20>":	{
+                            "<utils.motor.Motor object at 0x7fdfff61eac0>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -245,7 +245,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f23ea310d90>":	{
+                            "<utils.motor.Motor object at 0x7fdfff61ed30>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -301,7 +301,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f23ea318040>":	{
+                            "<utils.motor.Motor object at 0x7fdfff61efa0>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -407,15 +407,15 @@
     "gamma":	0.99,
     "lam":	0.97,
     "logger":	{
-        "<algos.rl.utils.EpochLogger object at 0x7f23e0f23640>":	{
+        "<algos.rl.utils.EpochLogger object at 0x7fdff622f5e0>":	{
             "epoch_dict":	{},
             "exp_name":	"ppo",
             "first_row":	true,
             "log_current_row":	{},
             "log_headers":	[],
-            "output_dir":	"/home/rich/uav_sim/algos/data/ppo/ppo_s1",
+            "output_dir":	"/home/rich/uav_sim/algos/data/ppo/ppo_s2",
             "output_file":	{
-                "<_io.TextIOWrapper name='/home/rich/uav_sim/algos/data/ppo/ppo_s1/progress.csv' mode='w' encoding='UTF-8'>":	{
+                "<_io.TextIOWrapper name='/home/rich/uav_sim/algos/data/ppo/ppo_s2/progress.csv' mode='w' encoding='UTF-8'>":	{
                     "mode":	"w"
                 }
             }
@@ -423,12 +423,12 @@
     },
     "logger_kwargs":	{
         "exp_name":	"ppo",
-        "output_dir":	"/home/rich/uav_sim/algos/data/ppo/ppo_s1"
+        "output_dir":	"/home/rich/uav_sim/algos/data/ppo/ppo_s2"
     },
     "max_ep_len":	5000,
     "pi_lr":	0.0003,
     "save_freq":	10,
-    "seed":	1,
+    "seed":	2,
     "steps_per_epoch":	5000,
     "target_kl":	0.01,
     "train_pi_iters":	2,

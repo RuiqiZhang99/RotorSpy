@@ -48,7 +48,7 @@ class Motor:
             #we don't allow negative speeds
             if cmd < 0:
                 cmd = 0
-            #simulate_2CC as a first order system.
+            # simulate_2CC as a first order system.
             # we correct for the body's angular velocity
             speedCommand = np.sqrt(cmd/self._speedSqrToThrust)
             
@@ -72,7 +72,6 @@ class Motor:
             
         #aerodynamic force & moment:
         self._angularMomentum = self._speed*self._inertia*self._rotAxis
-
         self._thrust = self._speedSqrToThrust*self._speed**2*self._thrustAxis
         self._torque = Vec3(0,0,0)
         #aero torque:

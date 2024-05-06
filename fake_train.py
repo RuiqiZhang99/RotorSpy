@@ -6,10 +6,11 @@ import time
 import algos.rl.ppo_core as core
 from algos.rl.utils import EpochLogger,setup_logger_kwargs, setup_pytorch_for_mpi, sync_params
 from algos.rl.utils import mpi_avg_grads, mpi_fork, mpi_avg, proc_id, mpi_statistics_scalar, num_procs
-from envs.multi_uav import DroneDock_Env
+from envs.LargeQuad_fake import DroneDock_Env
 from utils.vehicle import Vehicle
 import argparse
 import wandb
+import matplotlib.pyplot as plt
 
 class PPOBuffer:
     """
@@ -84,6 +85,16 @@ class PPOBuffer:
         data = dict(obs=self.obs_buf, act=self.act_buf, ret=self.ret_buf, adv=self.adv_buf, logp=self.logp_buf)
         return {k: torch.as_tensor(v, dtype=torch.float32) for k, v in data.items()}
 
+def learning_curve_display(epoch, last_show_num, logger, eval_rew_list):
+    eval_rew_list.append(np.mean(logger.epoch_dict['EpRet']))
+    if epoch / last_show_num > 1.1:
+        plt.cla()
+        # plt.title(track + train_mode, loc='center')
+        plt.plot(eval_rew_list, label="Rewards")
+        plt.legend()
+        plt.pause(0.01)
+        last_show_num = epoch
+    return eval_rew_list, last_show_num
 
 def ppo(env_fn, 
         actor_critic=core.MLPActorCritic, 
@@ -121,22 +132,18 @@ def ppo(env_fn,
 
     # Create actor-critic module
     actor_critic_1 = actor_critic(env.observation_space, env.action_space, **ac_kwargs)
-    actor_critic_2 = actor_critic(env.observation_space, env.action_space, **ac_kwargs)
+    logger.setup_pytorch_saver(actor_critic_1)
 
     # Sync params across processes
     sync_params(actor_critic_1)
-    sync_params(actor_critic_2)
 
     # Count variables
     var_counts_1 = tuple(core.count_vars(module) for module in [actor_critic_1.pi, actor_critic_1.v])
-    var_counts_2 = tuple(core.count_vars(module) for module in [actor_critic_2.pi, actor_critic_2.v])
     logger.log('\nNumber of parameters of Main Quad: \t pi: %d, \t v: %d\n'%var_counts_1)
-    logger.log('\nNumber of parameters of Mini Quad: \t pi: %d, \t v: %d\n'%var_counts_2)
 
     # Set up experience buffer
     local_steps_per_epoch = int(steps_per_epoch / num_procs())
     buffer_1 = PPOBuffer(obs_dim, act_dim, local_steps_per_epoch, gamma, lam)
-    buffer_2 = PPOBuffer(obs_dim, act_dim, local_steps_per_epoch, gamma, lam)
 
     # Set up function for computing PPO policy loss
     def compute_loss_pi(data, actor_critic):
@@ -166,14 +173,10 @@ def ppo(env_fn,
     pi_optimizer_1 = Adam(actor_critic_1.pi.parameters(), lr=pi_lr)
     vf_optimizer_1 = Adam(actor_critic_1.v.parameters(), lr=vf_lr)
     
-    pi_optimizer_2 = Adam(actor_critic_2.pi.parameters(), lr=pi_lr)
-    vf_optimizer_2 = Adam(actor_critic_2.v.parameters(), lr=vf_lr)
-
     # Set up model saving
     logger.setup_pytorch_saver(actor_critic_1)
-    logger.setup_pytorch_saver(actor_critic_2)
 
-    def update(buffer, actor_critic, pi_optimizer, vf_optimizer, agent_id='1'):
+    def update(buffer, actor_critic, pi_optimizer, vf_optimizer):
         data = buffer.get()
         pi_l_old, pi_info_old = compute_loss_pi(data, actor_critic)
         pi_l_old = pi_l_old.item()
@@ -202,29 +205,21 @@ def ppo(env_fn,
 
         # Log changes from update
         kl, ent, cf = pi_info['kl'], pi_info_old['ent'], pi_info['cf']
-        if agent_id == '1':
-            logger.store(
-                        LossPi_1=pi_l_old, 
-                        LossV_1=v_l_old,
-                        KL_1=kl, 
-                        Entropy_1=ent, 
-                        ClipFrac_1=cf,
-                        DeltaLossPi_1=(loss_pi.item() - pi_l_old),
-                        DeltaLossV_1=(loss_v.item() - v_l_old))
-        elif agent_id == '2':
-            logger.store(
-                        LossPi_2=pi_l_old, 
-                        LossV_2=v_l_old,
-                        KL_2=kl, 
-                        Entropy_2=ent, 
-                        ClipFrac_2=cf,
-                        DeltaLossPi_2=(loss_pi.item() - pi_l_old),
-                        DeltaLossV_2=(loss_v.item() - v_l_old))
-    
+        logger.store(
+                    LossPi_1=pi_l_old, 
+                    LossV_1=v_l_old,
+                    KL_1=kl, 
+                    Entropy_1=ent, 
+                    ClipFrac_1=cf,
+                    DeltaLossPi_1=(loss_pi.item() - pi_l_old),
+                    DeltaLossV_1=(loss_v.item() - v_l_old))
+            
+    last_show_num = 1
+    eval_rew_list = []
 
     # Prepare for interaction with environment
     start_time = time.time()
-    obs_1, obs_2, info = env.reset()
+    obs_1, info = env_fn.reset()
     # obs_1, info = env.reset()
     ep_ret, ep_len = 0, 0
 
@@ -232,22 +227,18 @@ def ppo(env_fn,
     for epoch in range(epochs):
         for t in range(local_steps_per_epoch):
             action_1, value_1, logp_1 = actor_critic_1.step(torch.as_tensor(obs_1, dtype=torch.float32))
-            action_2, value_2, logp_2 = actor_critic_2.step(torch.as_tensor(obs_2, dtype=torch.float32))
 
-            next_obs_1, next_obs_2, reward_1, reward_2, done, info = env.step(action_1, action_2)
+            next_obs_1, reward_1, done, info = env_fn.step(action_1)
             # next_obs_1, reward, done, info = env.step(action_1)
-            ep_ret += (reward_1 + reward_2) * 0.5
+            ep_ret += reward_1
             ep_len += 1
 
             # save and log
             buffer_1.store(obs_1, action_1, reward_1, value_1, logp_1)
-            buffer_2.store(obs_2, action_2, reward_2, value_2, logp_2)
             logger.store(VVals_1 = value_1)
-            logger.store(VVals_2 = value_2)
             
             # Update obs (critical!)
             obs_1 = next_obs_1
-            obs_2 = next_obs_2
 
             timeout = ep_len == max_ep_len
             terminal = done or timeout
@@ -259,27 +250,29 @@ def ppo(env_fn,
                 # if trajectory didn't reach terminal state, bootstrap value target
                 if timeout or epoch_ended:
                     _, value_1, _ = actor_critic_1.step(torch.as_tensor(obs_1, dtype=torch.float32))
-                    _, value_2, _ = actor_critic_2.step(torch.as_tensor(obs_2, dtype=torch.float32))
                 else:
-                    value_1, value_2 = 0, 0
+                    value_1 = 0
                 buffer_1.finish_path(value_1)
-                buffer_2.finish_path(value_2)
                 if terminal:
                     # only save EpRet / EpLen if trajectory finished
                     logger.store(EpRet=ep_ret, EpLen=ep_len)
-                obs_1, obs_2, info = env.reset()
+                obs_1, info = env_fn.reset()
                 # obs_1, info = env.reset()
                 ep_ret, ep_len = 0, 0
 
 
-        # Save model
-        if (epoch % save_freq == 0) or (epoch == epochs-1):
-            logger.save_state({'env': env}, None)
+        # Save the best model
+        if epoch > 0:
+            if np.mean(logger.epoch_dict['EpRet']) > max(eval_rew_list):
+                print('Find the Best Performance Model !!!')
+                logger.save_state({'env': env})
+                print('Saved!')
 
         # Perform PPO update!
-        update(buffer_1, actor_critic_1, pi_optimizer_1, vf_optimizer_1, agent_id='1')
-        update(buffer_2, actor_critic_2, pi_optimizer_2, vf_optimizer_2, agent_id='2')
+        update(buffer_1, actor_critic_1, pi_optimizer_1, vf_optimizer_1)
+        eval_rew_list,  last_show_num = learning_curve_display(epoch, last_show_num, logger, eval_rew_list)
 
+        
         # Log info about epoch
         logger.log_tabular('Epoch', epoch)
         logger.log_tabular('EpRet', average_only=True)
@@ -297,77 +290,30 @@ def ppo(env_fn,
         logger.log_tabular('KL_1', average_only=True)
         logger.log_tabular('ClipFrac_1', average_only=True)
         
-        
-        logger.log_tabular('VVals_2', average_only=True)
-        logger.log_tabular('LossPi_2', average_only=True)
-        logger.log_tabular('LossV_2', average_only=True)
-        # logger.log_tabular('DeltaLossPi_2', average_only=True)
-        # logger.log_tabular('DeltaLossV_2', average_only=True)
-        logger.log_tabular('Entropy_2', average_only=True)
-        logger.log_tabular('KL_2', average_only=True)
-        logger.log_tabular('ClipFrac_2', average_only=True)
-        
-        wandb.log({'train/rewards':logger.log_current_row['EpRet']},step=(epoch+1)*steps_per_epoch)
-        wandb.log({'train/avg_episode_length':logger.log_current_row['EpLen']},step=(epoch+1)*steps_per_epoch)
-        wandb.log({'train/avg_values_1':logger.log_current_row['VVals_1']},step=(epoch+1)*steps_per_epoch)
-        wandb.log({'train/loss_pi_1':logger.log_current_row['LossPi_1']},step=(epoch+1)*steps_per_epoch)
-        wandb.log({'train/loss_v_1':logger.log_current_row['LossV_1']},step=(epoch+1)*steps_per_epoch)
-        wandb.log({'train/entropy_loss_1':logger.log_current_row['Entropy_1']},step=(epoch+1)*steps_per_epoch)
-        wandb.log({'train/KL_1':logger.log_current_row['KL_1']},step=(epoch+1)*steps_per_epoch)
-        wandb.log({'train/avg_values_2':logger.log_current_row['VVals_2']},step=(epoch+1)*steps_per_epoch)
-        wandb.log({'train/loss_pi_2':logger.log_current_row['LossPi_2']},step=(epoch+1)*steps_per_epoch)
-        wandb.log({'train/loss_v_2':logger.log_current_row['LossV_2']},step=(epoch+1)*steps_per_epoch)
-        wandb.log({'train/entropy_loss_2':logger.log_current_row['Entropy_2']},step=(epoch+1)*steps_per_epoch)
-        wandb.log({'train/KL_2':logger.log_current_row['KL_2']},step=(epoch+1)*steps_per_epoch)
-        
         logger.dump_tabular()
 
 if __name__ == '__main__':
     
-    mass = 0.985  # kg
-    Ixx = 4e-3
-    Iyy = 8e-3
-    Izz = 12e-3
-    Ixy = 0
-    Ixz = 0
-    Iyz = 0
-    omegaSqrToDragTorque = np.matrix(np.diag([0, 0, 0.00014]))  # N.m/(rad/s)**2
-    armLength_1 = 0.4  # m
-    armLength_2 = 0.2
-    inertiaMatrix = np.matrix([[Ixx, Ixy, Ixz], [Ixy, Iyy, Iyz], [Ixz, Iyz, Izz]])
-    stdDevTorqueDisturbance = 1e-3  # [N.m]
-    motSpeedSqrToThrust = 7.6e-6  # propeller coefficient
-    motSpeedSqrToTorque = 1.1e-7  # propeller coefficient
-    motInertia   = 15e-6  #inertia of all rotating parts (motor + prop) [kg.m**2]
-
-    motTimeConst = 0.06  # time constant with which motor's speed responds [s]
-    motMinSpeed  = 0  #[rad/s]
-    motMaxSpeed  = 950  #[rad/s]
-    TILT_ANGLE = np.deg2rad(15)
-    
-    quadrotor_1 = Vehicle(mass, inertiaMatrix, armLength_1, omegaSqrToDragTorque, stdDevTorqueDisturbance)
-    quadrotor_2 = Vehicle(mass, inertiaMatrix, armLength_2, omegaSqrToDragTorque, stdDevTorqueDisturbance)
-    quadrotor_1.fastadd_quadmotor(motMinSpeed, motMaxSpeed, motSpeedSqrToThrust, motSpeedSqrToTorque, motTimeConst, motInertia, tilt_angle=TILT_ANGLE)
-    quadrotor_2.fastadd_quadmotor(motMinSpeed, motMaxSpeed, motSpeedSqrToThrust, motSpeedSqrToTorque, motTimeConst, motInertia, tilt_angle=TILT_ANGLE)
+    env = DroneDock_Env(pid_control=True, highlevel_on=True)
     
     parser = argparse.ArgumentParser()
-    parser.add_argument('--env', type=str, default=DroneDock_Env(quadrotor_1, quadrotor_2))
+    parser.add_argument('--env', type=str, default=env)
     parser.add_argument('--hidden_dim', type=int, default=128)
     parser.add_argument('--layers', type=int, default=3)
     parser.add_argument('--gamma', type=float, default=0.99)
     parser.add_argument('--seed', '-s', type=int, default=1)
-    parser.add_argument('--cpu', type=int, default=2)
+    parser.add_argument('--cpu', type=int, default=1)
     parser.add_argument('--steps', type=int, default=5000)
     parser.add_argument('--epochs', type=int, default=1000)
-    parser.add_argument('--exp_name', type=str, default='ppo')
+    parser.add_argument('--exp_name', type=str, default='pid')
     args = parser.parse_args()
 
     mpi_fork(args.cpu)  # run parallel code with mpi
     logger_kwargs = setup_logger_kwargs(args.exp_name, args.seed)
     
-    wandb.init(project="real_world_learning", name=f"ippo-residual-e2e", entity="hiperlab")
-    env = DroneDock_Env(quadrotor_1, quadrotor_2, residual_rl=True, highlevel_on=False)
-    ppo(env_fn=env,
+    # wandb.init(project="real_world_learning", name=f"ppo-residual-ll", entity="hiperlab")
+    
+    ppo(env_fn=args.env,
         actor_critic=core.MLPActorCritic,
         ac_kwargs=dict(hidden_sizes=[args.hidden_dim]*args.layers), 
         gamma=args.gamma, 
@@ -376,4 +322,4 @@ if __name__ == '__main__':
         epochs=args.epochs,
         logger_kwargs=logger_kwargs)
     
-    wandb.finish()
+    # wandb.finish()

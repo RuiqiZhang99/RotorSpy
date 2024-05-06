@@ -278,17 +278,17 @@ class Rotation:
         r3=self.q[3]*self.q[3]
     
         R = np.matrix(np.zeros([3,3]))
-        R[0,0] = r0 + r1 - r2 - r3
-        R[0,1] = 2*self.q[1]*self.q[2] - 2*self.q[0]*self.q[3]
-        R[0,2] = 2*self.q[1]*self.q[3] + 2*self.q[0]*self.q[2]
+        R[0, 0] = r0 + r1 - r2 - r3
+        R[0, 1] = 2*self.q[1]*self.q[2] - 2*self.q[0]*self.q[3]
+        R[0, 2] = 2*self.q[1]*self.q[3] + 2*self.q[0]*self.q[2]
     
-        R[1,0] = 2*self.q[1]*self.q[2] + 2*self.q[0]*self.q[3]
-        R[1,1] = r0 - r1 + r2 - r3
-        R[1,2] = 2*self.q[2]*self.q[3] - 2*self.q[0]*self.q[1]
+        R[1, 0] = 2*self.q[1]*self.q[2] + 2*self.q[0]*self.q[3]
+        R[1, 1] = r0 - r1 + r2 - r3
+        R[1, 2] = 2*self.q[2]*self.q[3] - 2*self.q[0]*self.q[1]
     
-        R[2,0] = 2*self.q[1]*self.q[3] - 2*self.q[0]*self.q[2]
-        R[2,1] = 2*self.q[2]*self.q[3] + 2*self.q[0]*self.q[1]
-        R[2,2] = r0 - r1 - r2 + r3
+        R[2, 0] = 2*self.q[1]*self.q[3] - 2*self.q[0]*self.q[2]
+        R[2, 1] = 2*self.q[2]*self.q[3] + 2*self.q[0]*self.q[1]
+        R[2, 2] = r0 - r1 - r2 + r3
         return R
     
     def __str__(self):

@@ -9,12 +9,12 @@ class Vehicle:
         self._inertia = inertiaMatrix
         self._mass = mass
         self._armlength = armLength
-        self._pos = Vec3(0,0,0)
-        self._vel = Vec3(0,0,0)
+        self._pos = Vec3(0, 0, 0)
+        self._vel = Vec3(0, 0, 0)
         self._att = Rotation.identity()
         self._ypr = self._att.to_euler_YPR()
-        self._omega = Vec3(0,0,0)
-        self._accel = Vec3(0,0,0)
+        self._omega = Vec3(0, 0, 0)
+        self._accel = Vec3(0, 0, 0)
         self._motors = []
         self._omegaSqrToDragTorque = omegaSqrToDragTorque
         self._disturbanceTorqueStdDev = disturbanceTorqueStdDev
@@ -36,30 +36,27 @@ class Vehicle:
         self.maxSpeed = maxSpeed
         self.speedSqrToThrust = speedSqrToThrust
         self.speedSqrToTorque = speedSqrToTorque
-        self._motors.append(Motor(Vec3(motor_pos, -motor_pos, 0), Vec3(0,0,1), minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle, ID=0))
-        self._motors.append(Motor(Vec3(-motor_pos, -motor_pos, 0), Vec3(0,0,-1), minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle, ID=1))
-        self._motors.append(Motor(Vec3(-motor_pos, motor_pos, 0), Vec3(0,0,1), minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle, ID=2))
-        self._motors.append(Motor(Vec3(motor_pos, motor_pos, 0), Vec3(0,0,-1), minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle, ID=3))
+        self._motors.append(Motor(Vec3( motor_pos,-motor_pos, 0), Vec3(0, 0, 1), minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle, ID=0))
+        self._motors.append(Motor(Vec3(-motor_pos,-motor_pos, 0), Vec3(0, 0,-1), minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle, ID=1))
+        self._motors.append(Motor(Vec3(-motor_pos, motor_pos, 0), Vec3(0, 0, 1), minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle, ID=2))
+        self._motors.append(Motor(Vec3( motor_pos, motor_pos, 0), Vec3(0, 0,-1), minSpeed, maxSpeed, speedSqrToThrust, speedSqrToTorque, timeConst, inertia, tilt_angle=tilt_angle, ID=3))
         return
         
         
-    def run(self, dt, motorCmds, dwForce_b=Vec3(0,0,0), spdCmd=False): # TODO: spd cmd 
+    def run(self, dt, motorCmds, dwForce_b=Vec3(0,0,0), forceDistrub=Vec3(0, 0, 0), torqueDistrub=Vec3(0, 0, 0), spdCmd=False): # TODO: spd cmd 
         
-        
-        totalForce_b  = Vec3(0,0,0)
-        totalTorque_b = Vec3(0,0,0)
+        totalForce_b  = forceDistrub
+        totalTorque_b = torqueDistrub
         for (mot, thrustCmd) in zip(self._motors, motorCmds):
             mot.run(dt, thrustCmd, spdCmd)
-            
             totalForce_b  += mot._thrust
             totalTorque_b += mot._torque
         
-        totalTorque_b += (- self._omega.norm2()*self._omegaSqrToDragTorque*self._omega)
+        totalTorque_b += (-self._omega.norm2() * self._omegaSqrToDragTorque * self._omega)
         totalForce_b += dwForce_b
         
         #add noise:
         totalTorque_b += Vec3(np.random.normal(), np.random.normal(), np.random.normal()) * self._disturbanceTorqueStdDev
-        
         
         angMomentum = self._inertia*self._omega
         for mot in self._motors:
@@ -68,24 +65,32 @@ class Vehicle:
         angAcc = np.linalg.inv(self._inertia)*(totalTorque_b - self._omega.cross(angMomentum))
         
         #translational acceleration:
-        acc = Vec3(0,0,-9.81)  # gravity
-        acc += self._att*totalForce_b/self._mass
+        acc = Vec3(0, 0, -9.81)  # gravity
+        acc += self._att * totalForce_b / self._mass
+        
+        
+        if self._pos.z <= 0:
+            self._pos.z = 0.0
+            if self._vel.z < 0:
+                self._vel.z = 0.0
+            if acc.z < 0:
+                acc.z = 0.0
         
         vel = self._vel
         att = self._att
         ypr = self._ypr
         omega = self._omega
         
-        
         #euler integration
         self._pos += vel*dt
+        
         if self._pos.z < 0:
             self._pos.z = 0.0
             
-        self._vel += acc*dt
-        self._att = att*Rotation.from_rotation_vector(omega*dt)
+        self._vel += acc * dt
+        self._att = att * Rotation.from_rotation_vector(omega*dt)
         self._ypr = self._att.to_euler_YPR()
-        self._omega += angAcc*dt
+        self._omega += angAcc * dt
         
         accMeas = (self._att.inverse() * (acc + Vec3(0, 0, 9.81))); 
         self._accel = accMeas

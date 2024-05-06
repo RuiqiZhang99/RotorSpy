@@ -31,7 +31,7 @@
                 }
             },
             "attController_1":	{
-                "<utils.attitudecontroller.QuadAttiController object at 0x7f23e9795b50>":	{
+                "<utils.attitudecontroller.QuadAttiController object at 0x7f7270b74b20>":	{
                     "time_const_xy":	0.064,
                     "time_const_z":	0.32
                 }
@@ -51,7 +51,7 @@
                     "ypr":	"[ 0. -0.  0.]"
                 }
             },
-            "des_pos1":	"[0.   0.   1.35]",
+            "des_pos1":	"[0.  0.  1.2]",
             "dt":	0.002,
             "fake_downwashForce":	{
                 "(0, 0, 0)":	{
@@ -76,7 +76,7 @@
             "max_timestep":	5000,
             "miniquad_random_init":	false,
             "mixer_1":	{
-                "<utils.mixer.QuadcopterMixer object at 0x7f23e9795c10>":	{
+                "<utils.mixer.QuadcopterMixer object at 0x7f7270b74be0>":	{
                     "_inertiaMatrix":	{
                         "[[0.005507 0.       0.      ]\n [0.       0.005507 0.      ]\n [0.       0.       0.009877]]":	{
                             "_getitem":	false
@@ -102,15 +102,15 @@
                 }
             },
             "output_folder":	"results",
-            "pid_controller":	false,
+            "pid_controller":	true,
             "posControl_1":	{
-                "<utils.positioncontroller.PositionController object at 0x7f23e9795a30>":	{
+                "<utils.positioncontroller.PositionController object at 0x7f7270b74a00>":	{
                     "_dampingRatio":	0.7,
                     "_natFreq":	3.8
                 }
             },
             "quadrotor_1":	{
-                "<utils.vehicle.Vehicle object at 0x7f244aaef100>":	{
+                "<utils.vehicle.Vehicle object at 0x7f72d1e92be0>":	{
                     "_accel":	{
                         "(0, 0, 0)":	{
                             "x":	0,
@@ -133,7 +133,7 @@
                     "_mass":	0.75,
                     "_motors":	[
                         {
-                            "<utils.motor.Motor object at 0x7f23ea3108b0>":	{
+                            "<utils.motor.Motor object at 0x7f72716ef880>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -189,7 +189,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f23ea310b20>":	{
+                            "<utils.motor.Motor object at 0x7f72716efaf0>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -245,7 +245,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f23ea310d90>":	{
+                            "<utils.motor.Motor object at 0x7f72716efd60>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -301,7 +301,7 @@
                             }
                         },
                         {
-                            "<utils.motor.Motor object at 0x7f23ea318040>":	{
+                            "<utils.motor.Motor object at 0x7f72716effd0>":	{
                                 "_angularMomentum":	{
                                     "(0, 0, 0)":	{
                                         "x":	0,
@@ -403,27 +403,27 @@
         }
     },
     "epochs":	1000,
-    "exp_name":	"ppo",
+    "exp_name":	"pid",
     "gamma":	0.99,
     "lam":	0.97,
     "logger":	{
-        "<algos.rl.utils.EpochLogger object at 0x7f23e0f23640>":	{
+        "<algos.rl.utils.EpochLogger object at 0x7f7266301610>":	{
             "epoch_dict":	{},
-            "exp_name":	"ppo",
+            "exp_name":	"pid",
             "first_row":	true,
             "log_current_row":	{},
             "log_headers":	[],
-            "output_dir":	"/home/rich/uav_sim/algos/data/ppo/ppo_s1",
+            "output_dir":	"/home/rich/uav_sim/algos/data/pid/pid_s1",
             "output_file":	{
-                "<_io.TextIOWrapper name='/home/rich/uav_sim/algos/data/ppo/ppo_s1/progress.csv' mode='w' encoding='UTF-8'>":	{
+                "<_io.TextIOWrapper name='/home/rich/uav_sim/algos/data/pid/pid_s1/progress.csv' mode='w' encoding='UTF-8'>":	{
                     "mode":	"w"
                 }
             }
         }
     },
     "logger_kwargs":	{
-        "exp_name":	"ppo",
-        "output_dir":	"/home/rich/uav_sim/algos/data/ppo/ppo_s1"
+        "exp_name":	"pid",
+        "output_dir":	"/home/rich/uav_sim/algos/data/pid/pid_s1"
     },
     "max_ep_len":	5000,
     "pi_lr":	0.0003,
